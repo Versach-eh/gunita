@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">380195206716-kdieujf9v3uq7nu6l11v7gvpj3905688.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">380195206716</string>
+    <string name="google_api_key" translatable="false">AIzaSyBbp6lNvZzREpnWPee5T_JbL9WrvmbBs2Y</string>
+    <string name="google_app_id" translatable="false">1:380195206716:android:5539358c3b1ee3f322f539</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBbp6lNvZzREpnWPee5T_JbL9WrvmbBs2Y</string>
+    <string name="google_storage_bucket" translatable="false">gunita20-582d5.appspot.com</string>
+    <string name="project_id" translatable="false">gunita20-582d5</string>
+</resources>
