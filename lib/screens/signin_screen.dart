@@ -98,6 +98,7 @@ class _SignInScreenState extends State<SignInScreen> {
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Magdelin', // Set the font family
             color: Color(0xff4f22cd),
           ),
         ),
@@ -170,38 +171,35 @@ class _SignInScreenState extends State<SignInScreen> {
           // validator: (value) => value!.isEmpty ? 'Invalid input' : null,
           
           controller: _passwordTextController,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: InputDecoration(
-            hintText: "Enter Password",
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide.none,
-            ),
-            filled: true,
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
-            suffixIcon: IconButton(
-              icon: Icon(
-                isPasswordHidden ? Icons.visibility_off : Icons.visibility,
-              ),
-              onPressed: () {
-                setState(() {
-                  isPasswordHidden = !isPasswordHidden;
-                });
-              },
-            ),
-          ),
-          validator: (val) =>
-                    val?.isEmpty ?? true ? 'Enter your Password' : null,
-          keyboardType: true
-        ? TextInputType.visiblePassword
-        : TextInputType.emailAddress,
-          onChanged: (val) {
-            // setState(() => _passwordTextController.text = val);
-          },
-          // obscureText: isPasswordHidden,
-        ),
+  obscureText: isPasswordHidden, // Update the obscureText property
+  enableSuggestions: false,
+  autocorrect: false,
+  decoration: InputDecoration(
+    hintText: "Enter Password",
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(18),
+      borderSide: BorderSide.none,
+    ),
+    filled: true,
+    fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+    suffixIcon: IconButton(
+      icon: Icon(
+        isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+      ),
+      onPressed: () {
+        setState(() {
+          isPasswordHidden = !isPasswordHidden;
+        });
+      },
+    ),
+  ),
+  validator: (val) =>
+    val?.isEmpty ?? true ? 'Enter your Password' : null,
+  keyboardType: TextInputType.visiblePassword,
+  onChanged: (val) {
+    // setState(() => _passwordTextController.text = val);
+  },
+),
 
 
         const SizedBox(height: 30),

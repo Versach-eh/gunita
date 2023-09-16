@@ -22,8 +22,9 @@ class LandingPage extends StatelessWidget {
                 const Text(
                   'Choose one',
                   style: TextStyle(
-                    fontSize: 28,
-                    fontFamily: 'Poppins',
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Magdelin-Bold',
                     fontStyle: FontStyle.normal,
                     color: Colors.black,
                   ),
@@ -57,8 +58,9 @@ class LandingPage extends StatelessWidget {
                         'Client',
                         style: TextStyle(
                           fontSize: 30,
+                          fontWeight: FontWeight.bold,
                           color: Color(0xff4f22cd),
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Magdelin',
                           fontStyle: FontStyle.normal,
                         ),
                       ),
@@ -95,8 +97,9 @@ class LandingPage extends StatelessWidget {
                         'Administrator',
                         style: TextStyle(
                           fontSize: 30,
+                          fontWeight: FontWeight.bold,
                           color: Color(0xff4f22cd),
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Magdelin',
                           fontStyle: FontStyle.normal,
                         ),
                       ),

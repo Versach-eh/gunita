@@ -38,9 +38,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final formkey = GlobalKey<FormState>();
   final controller = Get.put(SignUpController());
 
-  String email = '';
-  String password = '';
-
   bool isNumeric(String value) {
     if (value == null) {
       return false;
@@ -55,17 +52,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future signUp() async {
     if (passwordConfirmed()) {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: _emailTextController.text.trim(),
-        password: _passwordTextController.text.trim(),
-      )
-          .then((value) {
-        print('ACCOUNT CREATION SUCCESSFUL!');
-        addUserAccountDetails(_emailTextController.text.trim());
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const PreSignUpScreen()));
-      });
+      final email = _emailTextController.text.trim();
+      
+      // Check if the email is already in use
+      final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      
+      if (methods.isEmpty) {
+        // Email is not in use, proceed with registration
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: _passwordTextController.text.trim(),
+        ).then((value) {
+          print('ACCOUNT CREATION SUCCESSFUL!');
+          addUserAccountDetails(email);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const PreSignUpScreen()));
+        }).catchError((error) {
+          // Handle any errors that occur during registration
+          print('Error creating account: $error');
+        });
+      } else {
+        // Email is already in use, display an error message
+        print('Email is already in use.');
+        // You can show an error message to the user here
+      }
     }
   }
 
@@ -133,7 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 0,
         ),
         const Text(
           "Create new account",
@@ -190,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         const SizedBox(
-          height: 15,
+          height: 5,
         ),
         const Text(
           "Email",
@@ -230,7 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         const SizedBox(
-          height: 15,
+          height: 5,
         ),
         const Text(
           "Password",
@@ -278,7 +287,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         const SizedBox(
-          height: 15,
+          height: 5,
         ),
         const Text(
           "Confirm Password",
@@ -335,9 +344,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             }
           },
           child: const Text(
-            "Sign Up",
+            "NEXT",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Color(0xffffffff),
             ),

@@ -20,10 +20,10 @@ class CoverPage extends StatelessWidget {
             const Text(
               'Gunita',
               style: TextStyle(
-                fontSize: 50,
+                fontSize:60,
                 fontWeight: FontWeight.bold,
                 color: Color(0xfffcfbfd), // Set the text color to dark purple
-                fontFamily: 'Poppins', // Set the font family
+                fontFamily: 'MagdelinAlt-Text', // Set the font family
                 fontStyle: FontStyle.normal, // Set the font style
               ),
             ),
@@ -33,6 +33,8 @@ class CoverPage extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.normal,
                 color: Color(0xfff9f6f9), // Set the text color to white
+                fontFamily: 'MagdelinAlt-Medium', // Set the font family
+                fontStyle: FontStyle.normal, // Set the font style
               ),
             ),
             const SizedBox(height: 100),
@@ -49,6 +51,8 @@ class CoverPage extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Color(0xff3b0d6b),
+                  fontFamily: 'MagdelinAlt-Medium', // Set the font family
+                fontStyle: FontStyle.normal, // Set the font style
                   // Set the font color to black
                 ),
               ),
