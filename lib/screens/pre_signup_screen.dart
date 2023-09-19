@@ -5,7 +5,7 @@ import 'package:gunita20/screens/congratulations.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PreSignUpScreen extends StatefulWidget {
-  const PreSignUpScreen({super.key});
+  const PreSignUpScreen({Key? key}) : super(key: key);
 
   @override
   State<PreSignUpScreen> createState() => _PreSignUpScreenState();
@@ -76,23 +76,16 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                   ),
                   Form(
                     key: _formkey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                    child: ListView(
+                      physics: NeverScrollableScrollPhysics(), // Prevent scrolling
+                      shrinkWrap: true, // Allow the ListView to be scrollable inside SingleChildScrollView
                       children: [
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text(
-                          "Last name",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff020003),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 200,
-                          height: 60,
+                        _requiredFieldLabel("Last name"),
+                        Container(
+                          height: 60, // Fixed height
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: "",
@@ -117,17 +110,9 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        const Text(
-                          "First name",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff020003),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 200,
-                          height: 60,
+                        _requiredFieldLabel("First name"),
+                        Container(
+                          height: 60, // Fixed height
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: "",
@@ -160,9 +145,8 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                             color: Color(0xff020003),
                           ),
                         ),
-                        SizedBox(
-                          width: 200,
-                          height: 60,
+                        Container(
+                          height: 60, // Fixed height
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: "",
@@ -194,9 +178,8 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                                   color: Color(0xff020003),
                                 ),
                               ),
-                              SizedBox(
-                                width: 200,
-                                height: 60,
+                              Container(
+                                height: 60, // Fixed height
                                 child: TextFormField(
                                   decoration: InputDecoration(
                                     hintText: "",
@@ -224,17 +207,9 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  const Text(
-                                    "Birthday",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff020003),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 200,
-                                    height: 60,
+                                  _requiredFieldLabel("Birthday"),
+                                  Container(
+                                    height: 60, // Fixed height
                                     child: TextFormField(
                                       readOnly: true,
                                       controller: _birthdayTextController,
@@ -263,6 +238,12 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                                           borderSide: BorderSide.none,
                                         ),
                                       ),
+                                      validator: (val) {
+                                        if (val == null || val.isEmpty) {
+                                          return 'Select your birthday';
+                                        }
+                                        return null; // No error
+                                      },
                                     ),
                                   ),
                                 ],
@@ -274,17 +255,9 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  const Text(
-                                    "Gender",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff020003),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 200,
-                                    height: 60,
+                                  _requiredFieldLabel("Gender"),
+                                  Container(
+                                    height: 60, // Fixed height
                                     child: DropdownButtonFormField<String>(
                                       decoration: InputDecoration(
                                         hintText: "Gender",
@@ -307,6 +280,12 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                                           gender = val!;
                                           isExtensionNameVisible = (gender != "Female"); // Set visibility based on selected gender
                                         });
+                                      },
+                                      validator: (val) {
+                                        if (val == null || val.isEmpty) {
+                                          return 'Select your gender';
+                                        }
+                                        return null; // No error
                                       },
                                     ),
                                   ),
@@ -378,5 +357,29 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
       'name extension': _nameExtensionTextController.text.trim(),
       'gender': gender,
     });
+  }
+
+  Widget _requiredFieldLabel(String label) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff020003),
+          ),
+        ),
+        if (label != "Extension name") // Exclude the asterisk for "Extension name"
+          Text(
+            " *", // Asterisk indicating required field
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.red, // Red asterisk color
+            ),
+          ),
+      ],
+    );
   }
 }

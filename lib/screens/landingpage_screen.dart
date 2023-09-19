@@ -47,20 +47,20 @@ class LandingPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 5),
                         child: const Icon(
                           Icons.person, // Replace with your desired icon
-                          size: 100,
+                          size: 120,
                           color: Color(0xff4f22cd),
                         ),
                       ),
                       const Text(
                         'Client',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 34,
                           fontWeight: FontWeight.bold,
                           color: Color(0xff4f22cd),
-                          fontFamily: 'Magdelin',
+                          fontFamily: 'Magdelin-Bold',
                           fontStyle: FontStyle.normal,
                         ),
                       ),
@@ -85,21 +85,21 @@ class LandingPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 5),
                         child: const Icon(
                           Icons
                               .admin_panel_settings_rounded, // Replace with your desired icon
-                          size: 100,
+                          size: 120,
                           color: Color(0xff4f22cd),
                         ),
                       ),
                       const Text(
                         'Administrator',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 34,
                           fontWeight: FontWeight.bold,
                           color: Color(0xff4f22cd),
-                          fontFamily: 'Magdelin',
+                          fontFamily: 'Magdelin-Bold',
                           fontStyle: FontStyle.normal,
                         ),
                       ),

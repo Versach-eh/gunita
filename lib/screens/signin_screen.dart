@@ -1,15 +1,8 @@
-// NEEDS FIXING
-// obscure password not working
-
-
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gunita20/screens/forgot_password.dart';
 import 'package:gunita20/screens/home_screen.dart';
 import 'package:gunita20/screens/signup_screen.dart';
-
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,31 +11,55 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
 
   @override
-  void dispose() {                    // for memory management.practice dispose of all text editing controller?
+  void dispose() {
     _emailTextController.dispose();
     _passwordTextController.dispose();
     super.dispose();
   }
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailTextController.text.trim(), 
-      password: _passwordTextController.text.trim(),
-      ).then((value) { 
-       print('Sign in succesful!!!!!!!!!!!!!!!');
-       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                  const HomeScreen()), (Route<dynamic> route) => false);
-  }).onError((error, stackTrace) {
-    print('Error ${error.toString()}');
-  });
+  Future<void> signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailTextController.text.trim(),
+        password: _passwordTextController.text.trim(),
+      );
+      print('Sign in successful!');
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (Route<dynamic> route) => false,
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = e.message ?? 'An error occurred.';
+      if (e.code == 'user-not-found') {
+        errorMessage = 'Account does not exist.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Incorrect password.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Invalid email address.';
+      }
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
-
-  
 
   final formkey = GlobalKey<FormState>();
   bool isPasswordHidden = true;
@@ -55,22 +72,22 @@ class _SignInScreenState extends State<SignInScreen> {
           backgroundColor: const Color(0xffe7f9f9),
           body: Container(
             margin: const EdgeInsets.all(24),
-            child:Form(
-          key: formkey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const SizedBox(height: 15,),
-                  _header(context),
-                  const SizedBox(height: 15,),
-                  _inputField(context),
-                  _forgotPassword(context),
-                  _signup(context),
-                ],
+            child: Form(
+              key: formkey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(height: 15,),
+                    _header(context),
+                    const SizedBox(height: 15,),
+                    _inputField(context),
+                    _forgotPassword(context),
+                    _signup(context),
+                  ],
+                ),
               ),
             ),
-          ),
           ),
         ),
       ),
@@ -83,8 +100,8 @@ class _SignInScreenState extends State<SignInScreen> {
       children: [
         Row(children: [
           SizedBox(
-            width: 50,
-            height: 50,
+            width: 60,
+            height: 60,
             child: IconButton(
               icon: Image.asset('assets/images/arrow_back.png'),
               onPressed: () {
@@ -116,7 +133,6 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Widget _inputField(context) {
-    // var isPasswordHidden; // created by quick fix
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -129,9 +145,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
         TextFormField(
-          // validator: (value) => value?.isEmpty ?? true ? 'Invalid input' : null,
-          validator: (val) =>
-                    val?.isEmpty ?? true ? 'Enter your email' : null,
+          validator: (val) => val?.isEmpty ?? true ? 'Enter your email' : null,
           controller: _emailTextController,
           obscureText: false,
           enableSuggestions: true,
@@ -145,17 +159,9 @@ class _SignInScreenState extends State<SignInScreen> {
             filled: true,
             fillColor: const Color(0xff83dbfe).withOpacity(0.5),
           ),
-          keyboardType: false
-        ? TextInputType.visiblePassword
-        : TextInputType.emailAddress,
-          // onChanged: (val) {
-          //   setState(() => username = val);
-          // },
+          keyboardType: TextInputType.emailAddress,
         ),
-
-
         const SizedBox(height: 10),
-
         const Text(
           "Password",
           style: TextStyle(
@@ -164,61 +170,40 @@ class _SignInScreenState extends State<SignInScreen> {
             color: Color(0xff020003),
           ),
         ),
-
-
         TextFormField(
-          // validator: (value) => value?.isEmpty ?? true ? 'Invalid input' : null,
-          // validator: (value) => value!.isEmpty ? 'Invalid input' : null,
-          
           controller: _passwordTextController,
-  obscureText: isPasswordHidden, // Update the obscureText property
-  enableSuggestions: false,
-  autocorrect: false,
-  decoration: InputDecoration(
-    hintText: "Enter Password",
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(18),
-      borderSide: BorderSide.none,
-    ),
-    filled: true,
-    fillColor: const Color(0xff83dbfe).withOpacity(0.5),
-    suffixIcon: IconButton(
-      icon: Icon(
-        isPasswordHidden ? Icons.visibility_off : Icons.visibility,
-      ),
-      onPressed: () {
-        setState(() {
-          isPasswordHidden = !isPasswordHidden;
-        });
-      },
-    ),
-  ),
-  validator: (val) =>
-    val?.isEmpty ?? true ? 'Enter your Password' : null,
-  keyboardType: TextInputType.visiblePassword,
-  onChanged: (val) {
-    // setState(() => _passwordTextController.text = val);
-  },
-),
-
-
+          obscureText: isPasswordHidden,
+          enableSuggestions: false,
+          autocorrect: false,
+          decoration: InputDecoration(
+            hintText: "Enter Password",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            suffixIcon: IconButton(
+              icon: Icon(
+                isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: () {
+                setState(() {
+                  isPasswordHidden = !isPasswordHidden;
+                });
+              },
+            ),
+          ),
+          validator: (val) => val?.isEmpty ?? true ? 'Enter your Password' : null,
+          keyboardType: TextInputType.visiblePassword,
+          onChanged: (val) {},
+        ),
         const SizedBox(height: 30),
-
-
         ElevatedButton(
-          onPressed: () {                               // NEED TO FIX. ONNLY PUSH WHEN CORRECTLY LOGGED IN!
-             
-             if (formkey.currentState!.validate()){
-              try {
-                  signIn(); 
-                  } on FirebaseAuthException catch (e) {
-              print(e);
-              showDialog(context: context, builder: (context) {     // pop up :print from terminal to actual screen
-              return AlertDialog(
-          content: Text(e.message.toString()),
-        );
-      });
-             }}
+          onPressed: () {
+            if (formkey.currentState!.validate()) {
+              signIn();
+            }
           },
           child: const Text(
             "LOGIN",
@@ -231,7 +216,7 @@ class _SignInScreenState extends State<SignInScreen> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff4f22cd),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(20),
             ),
             minimumSize: const Size(280, 60),
           ),
@@ -243,14 +228,18 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _forgotPassword(context) {
     return TextButton(
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute (builder: (context) => const ForgotPassword()),
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ForgotPassword()),
         );
       },
       child: const Text(
         "Forgot password?",
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 18,
           color: Color(0xff4f22cd),
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Magdelin-Bold',
         ),
       ),
     );
@@ -271,9 +260,10 @@ class _SignInScreenState extends State<SignInScreen> {
           child: const Text(
             "Don't have an account? Sign Up",
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 17,
               fontWeight: FontWeight.bold,
               color: Colors.white,
+              fontFamily: 'Magdelin-Bold',
             ),
           ),
           style: ElevatedButton.styleFrom(

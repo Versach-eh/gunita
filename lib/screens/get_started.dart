@@ -23,7 +23,7 @@ class CoverPage extends StatelessWidget {
                 fontSize:60,
                 fontWeight: FontWeight.bold,
                 color: Color(0xfffcfbfd), // Set the text color to dark purple
-                fontFamily: 'MagdelinAlt-Text', // Set the font family
+                fontFamily: 'MagdelinAlt-Regular', // Set the font family
                 fontStyle: FontStyle.normal, // Set the font style
               ),
             ),
@@ -48,11 +48,10 @@ class CoverPage extends StatelessWidget {
               child: const Text(
                 'Get Started',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xff3b0d6b),
-                  fontFamily: 'MagdelinAlt-Medium', // Set the font family
-                fontStyle: FontStyle.normal, // Set the font style
+                  fontFamily: 'Magdelin-Bold', // Set the font family
                   // Set the font color to black
                 ),
               ),

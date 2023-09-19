@@ -53,10 +53,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future signUp() async {
     if (passwordConfirmed()) {
       final email = _emailTextController.text.trim();
-      
+
       // Check if the email is already in use
       final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      
+
       if (methods.isEmpty) {
         // Email is not in use, proceed with registration
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -79,15 +79,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   bool passwordConfirmed() {
-    return _passwordTextController.text.trim() ==
-        _confirmPasswordTextController.text.trim();
+    return _passwordTextController.text.trim() == _confirmPasswordTextController.text.trim();
   }
 
   Future addUserAccountDetails(String email) async {
     final user = FirebaseAuth.instance.currentUser!;
-    await FirebaseFirestore.instance
-        .collection('Users/${user.uid}/UserDetails')
-        .add({
+    await FirebaseFirestore.instance.collection('Users/${user.uid}/UserDetails').add({
       'email': email,
     });
   }
@@ -163,21 +160,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
-          "Contact number",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff020003),
-          ),
-        ),
+        _requiredFieldLabel("Contact number"),
         TextFormField(
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please enter your contact number';
             }
-            if (!RegExp(r'^\d{4}-\d{3}-\d{4}$').hasMatch(value)) {
-              return 'Invalid contact number format';
+            if (!RegExp(r'^09\d{2}-\d{3}-\d{4}$').hasMatch(value)) {
+              return 'Invalid contact number format. It should start with 09';
             }
             return null; // Return null if validation succeeds
           },
@@ -201,14 +191,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(
           height: 5,
         ),
-        const Text(
-          "Email",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff020003),
-          ),
-        ),
+        _requiredFieldLabel("Email"),
         TextFormField(
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -241,14 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(
           height: 5,
         ),
-        const Text(
-          "Password",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff020003),
-          ),
-        ),
+        _requiredFieldLabel("Password"),
         TextFormField(
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -270,9 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             prefixIcon: const Icon(Icons.lock),
             suffixIcon: IconButton(
               icon: Icon(
-                _showPassword
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+                _showPassword ? Icons.visibility : Icons.visibility_off,
               ),
               onPressed: () {
                 setState(() {
@@ -289,14 +263,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(
           height: 5,
         ),
-        const Text(
-          "Confirm Password",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff020003),
-          ),
-        ),
+        _requiredFieldLabel("Confirm Password"),
         TextFormField(
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -318,9 +285,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             prefixIcon: const Icon(Icons.lock),
             suffixIcon: IconButton(
               icon: Icon(
-                _showPassword
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+                _showPassword ? Icons.visibility : Icons.visibility_off,
               ),
               onPressed: () {
                 setState(() {
@@ -357,6 +322,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
               borderRadius: BorderRadius.circular(15),
             ),
             minimumSize: const Size(280, 60),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _requiredFieldLabel(String label) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff020003),
+          ),
+        ),
+        Text(
+          " *", // Asterisk indicating required field
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.red, // Red asterisk color
           ),
         ),
       ],
