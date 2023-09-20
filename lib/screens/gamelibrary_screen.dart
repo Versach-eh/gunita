@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gunita20/screens/album/album_screen.dart';
+import 'package:gunita20/screens/crossword.dart';
 import 'package:gunita20/screens/home_screen.dart';
 import 'package:gunita20/screens/jigzaw.dart';
 import 'package:gunita20/screens/settings/settings_screen.dart';
@@ -56,7 +57,7 @@ class _GameLibraryState extends State<GameLibrary> {
                     () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => GameLibrary()),
+                        MaterialPageRoute(builder: (context) => CrosswordApp()),
                       );
                     },
                   ),
