@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gunita20/screens/pre_signup_screen.dart';
 import 'package:gunita20/services/signup_controller.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:gunita20/screens/loading.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -59,6 +60,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (methods.isEmpty) {
         // Email is not in use, proceed with registration
+
+        // loading animation                                      // ADD THIS LINES
+        showDialog(context: context, builder: (context) {
+          return Loading();
+        });
+
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: _passwordTextController.text.trim(),
@@ -90,10 +97,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
+      constraints: BoxConstraints.expand(), // Occupy the whole screen
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
       child: Scaffold(
-        backgroundColor: const Color(0xffe7f9f9),
+        backgroundColor: Colors.transparent, // Make scaffold background transparent
         body: Container(
           margin: const EdgeInsets.all(24),
           child: Form(
@@ -133,19 +149,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const Text(
           "Welcome!",
           style: TextStyle(
-            fontSize: 37,
+            fontSize: 45,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Magdelin-Bold',
             color: Color(0xff4f22cd),
           ),
         ),
-        const SizedBox(
-          height: 0,
-        ),
+
         const Text(
           "Create new account",
           style: TextStyle(
-            fontSize: 23,
+            fontSize: 30,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Magdelin',
             color: Color(0xff8a8a8a),
           ),
         ),
@@ -179,7 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           keyboardType: TextInputType.phone,
           decoration: InputDecoration(
             hintText: "e.g., 0900-000-0000",
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
             filled: true,
             prefixIcon: const Icon(Icons.phone),
             border: OutlineInputBorder(
@@ -212,7 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: "e.g., example@example.com",
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
             filled: true,
             prefixIcon: const Icon(Icons.email),
             border: OutlineInputBorder(
@@ -241,7 +257,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           autocorrect: false,
           decoration: InputDecoration(
             hintText: "",
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
             filled: true,
             prefixIcon: const Icon(Icons.lock),
             suffixIcon: IconButton(
@@ -280,7 +296,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           autocorrect: false,
           decoration: InputDecoration(
             hintText: "",
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            fillColor: Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
             filled: true,
             prefixIcon: const Icon(Icons.lock),
             suffixIcon: IconButton(
@@ -313,11 +329,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Magdelin',
               color: Color(0xffffffff),
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff4f22cd),
+            backgroundColor: Color(0xff4530B2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
@@ -328,26 +345,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _requiredFieldLabel(String label) {
-    return Row(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff020003),
-          ),
+ Widget _requiredFieldLabel(String label) {
+  return Row(
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 23,
+          fontWeight: FontWeight.bold,
+          color: Color(0xff020003),
+          fontFamily: 'Magdelin',
+          //color: Colors.red,
         ),
-        Text(
-          " *", // Asterisk indicating required field
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.red, // Red asterisk color
-          ),
+      ),
+      Text(
+        " *", // Asterisk indicating required field
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.red, // Red asterisk color
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 }

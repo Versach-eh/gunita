@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:gunita20/screens/album/album_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:gunita20/screens/loading.dart';
 
 import 'image_model.dart';
 
@@ -56,6 +57,11 @@ class _AlbumImagesScreenState extends State<AlbumImagesScreen> {
       );
 
       await uploadTask.whenComplete(() async {
+
+        // loading animation                                      // ADD THIS LINES
+        showDialog(context: context, builder: (context) {
+          return Loading();
+        });
 
         // Getting the image URL after upload completion
         String downloadUrl = await ref.getDownloadURL();

@@ -25,7 +25,7 @@ class _EditPasswordState extends State<EditPassword> {
     return SafeArea(
       child: MaterialApp(
         home: Scaffold(
-          backgroundColor: const Color(0xffe7f9f9),
+          backgroundColor: const Color(0xffDBE9F7),
           body: SingleChildScrollView(
             child: Container(
               margin: const EdgeInsets.all(24),

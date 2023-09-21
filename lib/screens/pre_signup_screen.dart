@@ -32,11 +32,18 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
   DateTime? selectedDate; // Add this variable
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: MaterialApp(
-        home: Scaffold(
-          backgroundColor: const Color(0xffe7f9f9),
+ Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints.expand(), // Occupy the whole screen
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Make scaffold background transparent
           body: SingleChildScrollView(
             child: Container(
               margin: const EdgeInsets.all(24),
@@ -80,16 +87,13 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                       physics: NeverScrollableScrollPhysics(), // Prevent scrolling
                       shrinkWrap: true, // Allow the ListView to be scrollable inside SingleChildScrollView
                       children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
                         _requiredFieldLabel("Last name"),
                         Container(
-                          height: 60, // Fixed height
+                          height: 50, // Fixed height
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: "",
-                              fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+                              fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
                               filled: true,
                               prefixIcon: const Icon(Icons.person),
                               border: OutlineInputBorder(
@@ -112,11 +116,11 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                         ),
                         _requiredFieldLabel("First name"),
                         Container(
-                          height: 60, // Fixed height
+                          height: 50, // Fixed height
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: "",
-                              fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+                              fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
                               filled: true,
                               prefixIcon: const Icon(Icons.person),
                               border: OutlineInputBorder(
@@ -146,11 +150,11 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                           ),
                         ),
                         Container(
-                          height: 60, // Fixed height
+                          height: 50, // Fixed height
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: "",
-                              fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+                              fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
                               filled: true,
                               prefixIcon: const Icon(Icons.person),
                               border: OutlineInputBorder(
@@ -179,11 +183,11 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                                 ),
                               ),
                               Container(
-                                height: 60, // Fixed height
+                                height: 50, // Fixed height
                                 child: TextFormField(
                                   decoration: InputDecoration(
                                     hintText: "",
-                                    fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+                                    fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
                                     filled: true,
                                     prefixIcon: const Icon(Icons.person),
                                     border: OutlineInputBorder(
@@ -230,7 +234,7 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                                       },
                                       decoration: InputDecoration(
                                         hintText: "Select your birthday",
-                                        fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+                                        fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
                                         filled: true,
                                         prefixIcon: const Icon(Icons.cake_outlined),
                                         border: OutlineInputBorder(
@@ -261,7 +265,7 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
                                     child: DropdownButtonFormField<String>(
                                       decoration: InputDecoration(
                                         hintText: "Gender",
-                                        fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+                                        fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
                                         filled: true,
                                         prefixIcon: const Icon(Icons.person),
                                         border: OutlineInputBorder(
@@ -339,8 +343,8 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
+    
   }
 
   Future<void> addUserDetails(
@@ -360,26 +364,29 @@ class _PreSignUpScreenState extends State<PreSignUpScreen> {
   }
 
   Widget _requiredFieldLabel(String label) {
-    return Row(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff020003),
-          ),
+  return Row(
+    children: [
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 23,
+          fontWeight: FontWeight.bold,
+          color: Color(0xff020003),
+          // Add your desired text style properties here
+          // For example, you can change the font family or text color
+          fontFamily: 'Magdelin',
+          //color: Colors.red,
         ),
-        if (label != "Extension name") // Exclude the asterisk for "Extension name"
-          Text(
-            " *", // Asterisk indicating required field
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.red, // Red asterisk color
-            ),
-          ),
-      ],
-    );
-  }
+      ),
+      Text(
+        " *", // Asterisk indicating required field
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.red, // Red asterisk color
+        ),
+      ),
+    ],
+  );
+}
 }

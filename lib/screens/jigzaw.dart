@@ -1,6 +1,9 @@
 // Need to fix crop image error
 // ignore_for_file: prefer_const_constructors, unnecessary_new
 
+
+
+
 import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -8,26 +11,125 @@ import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as ui;
 import 'dart:math' as math;
 
+
+
+
+import 'dart:async';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
+
+
+
+
+
+
+
 class PuzzleWidget extends StatefulWidget {
   PuzzleWidget({Key? key}) : super(key: key);
+
+
+
 
   @override
   _PuzzleWidgetState createState() => _PuzzleWidgetState();
 }
 
+
+
+
 class _PuzzleWidgetState extends State<PuzzleWidget> {
+
+
+
+
+  // set up image picker
+  File? _image;
+  int xSplitCount = 3;
+  int ySplitCount = 3;
+
+
+  int completedPieces = 0;
+
+
+                      void _checkCompletion() {
+              completedPieces++;
+              if (completedPieces == xSplitCount * ySplitCount + 4) {
+                _showCongratulationsDialog(context);
+              }
+            }
+
+
+
+
+
+
+  // Method to pick an image from the camera or gallery.
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+
+
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+
+  void _showCongratulationsDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Congratulations!'),
+        content: Text('You have completed the puzzle.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+
+
+
+
+
+
+
+
   // lets setup our puzzle 1st
+
+
+
 
   // add test button to check crop work
   // well done.. let put callback for success put piece & complete all
 
+
+
+
   GlobalKey<_JigsawWidgetState> jigKey = new GlobalKey<_JigsawWidgetState>();
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Color(0xff4f22cd),
+       
         child: SafeArea(
           child: Center(
             child: Column(
@@ -36,30 +138,75 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
                 Container(
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(border: Border.all(width: 2)),
+                 
                   child: JigsawWidget(
                     callbackFinish: () {
                       // check function
                       print("callbackFinish");
                     },
+
+
+                   
+
+
                     callbackSuccess: () {
                       print("callbackSuccess");
+                      _checkCompletion(); // Call the checkCompletion method
                       // lets fix error size
                     },
+
+
+
+
                     key: jigKey,
                     // set container for our jigsaw image
-                    child: Padding(
+                    child: _image != null
+                    ? Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Image(
+                      child: Image.file(
+                        _image!,
                         fit: BoxFit.contain,
-                        image: AssetImage("assets/images/elder_love.png"),
-                      ),
-                    ),
+                        ),
+                    )
+                    : Text("No Image Selected"), // Display a message if no image is selected.
                   ),
                 ),
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      ElevatedButton(
+                        child: Text("Choose Image"),
+                        onPressed: () {
+                          showModalBottomSheet(context: context,
+               builder: (BuildContext context) {
+                 return SafeArea(
+                   child: new Column(
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       new ListTile(
+                         leading: new Icon(Icons.camera),
+                         title: new Text('Camera'),
+                         onTap: () {
+                          _pickImage(ImageSource.camera);
+                          Navigator.pop(context);
+                         },
+                       ),
+                       new ListTile(
+                         leading: new Icon(Icons.image),
+                         title: new Text('Gallery'),
+                         onTap: () {
+                          _pickImage(ImageSource.gallery);
+                         
+                         },
+                       ),
+                     ],
+                   ),
+                 );
+               }
+           );
+                        },
+                      ),
                       ElevatedButton(
                         child: Text("Reset"),
                         onPressed: () {
@@ -72,17 +219,43 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
                         },
                         child: Text("Start"),
                       ),
+
+
+                    ElevatedButton(
+                        child: Text("5x5"), // Button for 5x5
+                        onPressed: () {
+                          setState(() {
+                            xSplitCount = 5;
+                            ySplitCount = 5;
+                          });
+                        },
+                      ),
+                      ElevatedButton(
+                        child: Text("7x7"), // Button for 7x7
+                        onPressed: () {
+                          setState(() {
+                            xSplitCount = 7;
+                            ySplitCount = 7;
+                            });
+                        },
+                      ),
+                     
                     ],
                   ),
-                )
+                ),
+               
               ],
             ),
+           
           ),
         ),
       ),
     );
   }
 }
+
+
+
 
 // make new widget name JigsawWidget
 // let move jigsaw blok
@@ -93,34 +266,58 @@ class JigsawWidget extends StatefulWidget {
   JigsawWidget({required Key key, required this.child, required this.callbackFinish, required this.callbackSuccess})
       : super(key: key);
 
+
+
+
   @override
   _JigsawWidgetState createState() => _JigsawWidgetState();
 }
+
+
+
 
 class _JigsawWidgetState extends State<JigsawWidget> {
   GlobalKey _globalKey = GlobalKey();
    ui.Image? fullImage;
    Size? size;
 
+
+
+
   List<List<BlockClass>> images = <List<BlockClass>>[];
   ValueNotifier<List<BlockClass>> blocksNotifier =
       new ValueNotifier<List<BlockClass>>(<BlockClass>[]);
   late CarouselController _carouselController;
 
+
+
+
   // to save current touch down offset & current index puzzle
   Offset _pos = Offset.zero;
   late int _index;
 
+
+
+
   _getImageFromWidget() async {
 final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
 
+
+
+
     size = boundary.size;
-    var img = await boundary?.toImage();
+    var img = await boundary.toImage();
     var byteData = await img?.toByteData(format: ImageByteFormat.png);
     var pngBytes = byteData?.buffer.asUint8List();
 
+
+
+
     return ui.decodeImage(pngBytes!);
   }
+
+
+
 
   resetJigsaw() {
     images.clear();
@@ -131,36 +328,69 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
     setState(() {});
   }
 
+
+
+
   Future<void> generaJigsawCropImage() async {
     // 1st we need create a class for block image
     images = <List<BlockClass>>[];
 
+
+
+
     // get image from out boundary
+
+
+
 
     if (fullImage == null) fullImage = await _getImageFromWidget();
 
+
+
+
     // split image using crop
+
+
+
 
     int xSplitCount = 3;
     int ySplitCount = 3;
+
+
+
 
     // i think i know what the problom width & height not correct!
     double widthPerBlock =
         fullImage!.width / xSplitCount; // change back to width
     double heightPerBlock = fullImage!.height / ySplitCount;
 
+
+
+
     for (var y = 0; y < ySplitCount; y++) {
       // temporary images
       List<BlockClass> tempImages = <BlockClass>[];
+
+
+
 
       images.add(tempImages);
       for (var x = 0; x < xSplitCount; x++) {
         int randomPosRow = math.Random().nextInt(2) % 2 == 0 ? 1 : -1;
         int randomPosCol = math.Random().nextInt(2) % 2 == 0 ? 1 : -1;
 
+
+
+
         Offset offsetCenter = Offset(widthPerBlock / 2, heightPerBlock / 2);
 
+
+
+
         // make random jigsaw pointer in or out
+
+
+
 
         ClassJigsawPos jigsawPosSide = new ClassJigsawPos(
           bottom: y == ySplitCount - 1 ? 0 : randomPosCol,
@@ -177,20 +407,35 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
               : -images[y - 1][x].jigsawBlockWidget.imageBox.posSide.bottom,
         );
 
+
+
+
         double xAxis = widthPerBlock * x;
         double yAxis = heightPerBlock * y; // this is culprit.. haha
 
+
+
+
         // size for pointing
         double minSize = math.min(widthPerBlock, heightPerBlock) / 15 * 4;
+
+
+
 
         offsetCenter = Offset(
           (widthPerBlock / 2) + (jigsawPosSide.left == 1 ? minSize : 0),
           (heightPerBlock / 2) + (jigsawPosSide.top == 1 ? minSize : 0),
         );
 
+
+
+
         // change axis for posSideEffect
         xAxis -= jigsawPosSide.left == 1 ? minSize : 0;
         yAxis -= jigsawPosSide.top == 1 ? minSize : 0;
+
+
+
 
         // get width & height after change Axis Side Effect
         double widthPerBlockTemp = widthPerBlock +
@@ -199,6 +444,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
         double heightPerBlockTemp = heightPerBlock +
             (jigsawPosSide.top == 1 ? minSize : 0) +
             (jigsawPosSide.bottom == 1 ? minSize : 0);
+
+
+
 
         // create crop image for each block
         ui.Image temp = ui.copyCrop(
@@ -209,9 +457,15 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
           height: heightPerBlockTemp.round(),
         );
 
+
+
+
         // get offset for each block show on center base later
         Offset offset = Offset(size!.width / 2 - widthPerBlockTemp / 2,
             size!.height / 2 - heightPerBlockTemp / 2);
+
+
+
 
         ImageBox imageBox = new ImageBox(
           image: Image.memory(
@@ -225,6 +479,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
           size: Size(widthPerBlockTemp, heightPerBlockTemp),
         );
 
+
+
+
         images[y].add(
           new BlockClass(
               jigsawBlockWidget: JigsawBlockWidget(
@@ -236,6 +493,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
       }
     }
 
+
+
+
     blocksNotifier.value = images.expand((image) => image).toList();
     // let random a bit so blok puzzle not in incremet order
     // ops..bug .. i found culprit.. seem RepaintBoundary return wrong width on render..fix 1st using height
@@ -246,6 +506,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
     setState(() {});
   }
 
+
+
+
   @override
   void initState() {
     // let generate split image
@@ -255,9 +518,15 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
     super.initState();
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     Size sizeBox = MediaQuery.of(context).size;
+
+
+
 
     return ValueListenableBuilder(
         valueListenable: blocksNotifier,
@@ -268,6 +537,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
           List<BlockClass> blockDone = blocks
               .where((block) => block.jigsawBlockWidget.imageBox.isDone)
               .toList();
+
+
+
 
           return Container(
             // set height for jigsaw base
@@ -282,12 +554,15 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
                       // listener for move event & up
                       // lets proceed 1st
                       onPointerUp: (event) {
-                        
+                       
                         if (blockNotDone.length == 0) {
                           resetJigsaw();
                           // can set callback for complete all piece
                           widget.callbackFinish.call();
                         }
+
+
+
 
                         if (_index == null) {
                           // set carousel for change _index
@@ -296,22 +571,34 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
                                   microseconds:
                                       600)); // lower to make fast move
                           setState(() {
-                            // _index = 0;
+                             _index = 0;
                           });
                         }
                       },
                       onPointerMove: (event) {
                         if (_index == null) return;
 
+
+
+
                         Offset offset = event.localPosition - _pos;
 
+
+
+
                         blockNotDone[_index].offset = offset;
+
+
+
 
                         if ((blockNotDone[_index].offset -
                                     blockNotDone[_index].offsetDefault)
                                 .distance <
                             5) {
                           // drag block close to default position will trigger this cond
+
+
+
 
                           blockNotDone[_index]
                               .jigsawBlockWidget
@@ -320,14 +607,26 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
                           blockNotDone[_index].offset =
                               blockNotDone[_index].offsetDefault;
 
+
+
+
                           _index = 0;
                           // not allow index change after success put piece
 
+
+
+
                           blocksNotifier.notifyListeners();
+
+
+
 
                           // can set callback success put piece
                           widget.callbackSuccess.call();
                         }
+
+
+
 
                         setState(() {});
                       },
@@ -344,6 +643,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
                               ),
                             )
                           ],
+
+
+
 
                           // no errors...let show.. let use ValueNotifier for easy use
                           //  hye .. :) lets proceed
@@ -391,6 +693,9 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
                                                       .jigsawBlockWidget
                                                       .imageBox
                                                       .isDone) return;
+
+
+
 
                                                   setState(() {
                                                     _pos =
@@ -454,10 +759,19 @@ final RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObje
   }
 }
 
+
+
+
 class JigsawPainterBackground extends CustomPainter {
   List<BlockClass> blocks;
 
+
+
+
   JigsawPainterBackground(this.blocks);
+
+
+
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -469,6 +783,9 @@ class JigsawPainterBackground extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     Path path = new Path();
 
+
+
+
     // loop blocks so we can draw line at base
     this.blocks.forEach((element) {
       Path pathTemp = getPiecePath(
@@ -478,20 +795,35 @@ class JigsawPainterBackground extends CustomPainter {
         element.jigsawBlockWidget.imageBox.posSide,
       );
 
+
+
+
       path.addPath(pathTemp, element.offsetDefault);
     });
 
+
+
+
     canvas.drawPath(path, paint);
   }
+
+
+
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
+
+
+
 class BlockClass {
   Offset offset;
   Offset offsetDefault;
   JigsawBlockWidget jigsawBlockWidget;
+
+
+
 
   BlockClass({
     required this.offset,
@@ -500,6 +832,9 @@ class BlockClass {
   });
 }
 
+
+
+
 class ImageBox {
   Widget image;
   ClassJigsawPos posSide;
@@ -507,6 +842,9 @@ class ImageBox {
   Size size;
   double radiusPoint;
   bool isDone;
+
+
+
 
   ImageBox({
     required this.image,
@@ -518,22 +856,40 @@ class ImageBox {
   });
 }
 
+
+
+
 class ClassJigsawPos {
   int top, bottom, left, right;
 
+
+
+
   ClassJigsawPos({required this.top, required this.bottom, required this.left, required this.right});
 }
+
+
+
 
 class JigsawBlockWidget extends StatefulWidget {
   ImageBox imageBox;
   JigsawBlockWidget({ Key? key, required this.imageBox}) : super(key: key);
 
+
+
+
   @override
   _JigsawBlockWidgetState createState() => _JigsawBlockWidgetState();
 }
 
+
+
+
 class _JigsawBlockWidgetState extends State<JigsawBlockWidget> {
   // lets start clip crop image so show like jigsaw puzzle
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -547,8 +903,14 @@ class _JigsawBlockWidgetState extends State<JigsawBlockWidget> {
   }
 }
 
+
+
+
 class JigsawBlokPainter extends CustomPainter {
   ImageBox imageBox;
+
+
+
 
   JigsawBlokPainter({
     required this.imageBox,
@@ -564,10 +926,16 @@ class JigsawBlokPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
+
+
+
     canvas.drawPath(
         getPiecePath(size, this.imageBox.radiusPoint,
             this.imageBox.offsetCenter, this.imageBox.posSide),
         paint);
+
+
+
 
     if (this.imageBox.isDone) {
       Paint paintDone = new Paint()
@@ -581,9 +949,15 @@ class JigsawBlokPainter extends CustomPainter {
     }
   }
 
+
+
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+
+
 
 class PuzzlePieceClipper extends CustomClipper<Path> {
   ImageBox imageBox;
@@ -597,9 +971,15 @@ class PuzzlePieceClipper extends CustomClipper<Path> {
         this.imageBox.offsetCenter, this.imageBox.posSide);
   }
 
+
+
+
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }
+
+
+
 
 getPiecePath(
   Size size,
@@ -609,10 +989,16 @@ getPiecePath(
 ) {
   Path path = new Path();
 
+
+
+
   Offset topLeft = Offset(0, 0);
   Offset topRight = Offset(size.width, 0);
   Offset bottomLeft = Offset(0, size.height);
   Offset bottomRight = Offset(size.width, size.height);
+
+
+
 
   // calculate top point on 4 point
   topLeft = Offset(posSide.left > 0 ? radiusPoint : 0,
@@ -627,6 +1013,9 @@ getPiecePath(
   bottomLeft = Offset(posSide.left > 0 ? radiusPoint : 0,
           (posSide.bottom > 0) ? -radiusPoint : 0) +
       bottomLeft;
+
+
+
 
   // calculate mid point for min & max
   double topMiddle = posSide.top == 0
@@ -650,7 +1039,13 @@ getPiecePath(
           ? topRight.dx + radiusPoint
           : topRight.dx - radiusPoint);
 
+
+
+
   // solve.. wew
+
+
+
 
   path.moveTo(topLeft.dx, topLeft.dy);
   // top draw
@@ -680,14 +1075,26 @@ getPiecePath(
         Offset.zero);
   path.lineTo(topLeft.dx, topLeft.dy);
 
+
+
+
   path.close();
+
+
+
 
   return path;
 }
 
+
+
+
 // design each point shape
 calculatePoint(Axis axis, double fromPoint, Offset point, double radiusPoint) {
   Path path = new Path();
+
+
+
 
   if (axis == Axis.horizontal) {
     path.moveTo(point.dx - radiusPoint / 2, fromPoint);
@@ -701,5 +1108,17 @@ calculatePoint(Axis axis, double fromPoint, Offset point, double radiusPoint) {
     path.lineTo(fromPoint, point.dy + radiusPoint / 2);
   }
 
+
+
+
   return path;
 }
+
+
+
+
+
+
+
+
+

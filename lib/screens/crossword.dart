@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+
 
 void main() {
   runApp(CrosswordApp());
@@ -10,11 +14,21 @@ class CrosswordApp extends StatefulWidget {
 }
 
 class _CrosswordAppState extends State<CrosswordApp> {
-  final List<String> words = []; // Initialize the words list here
+  final List<String> words = [];
+  List<List<String>>? crossword;
 
   void addWord(String word) {
     setState(() {
       words.add(word);
+    });
+  }
+
+  Future<void> generateCrossword(List<String> words) async {
+    // Start generating the crossword in a background isolate
+    final generatedCrossword = await _generateCrosswordGrid(words);
+
+    setState(() {
+      crossword = generatedCrossword;
     });
   }
 
@@ -23,12 +37,14 @@ class _CrosswordAppState extends State<CrosswordApp> {
     return MaterialApp(
       title: 'Crossword Puzzle Game',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xff4530B2),
         scaffoldBackgroundColor: Colors.white,
       ),
       home: CrosswordScreen(
         words: words,
         onAddWord: addWord,
+        onGenerateCrossword: generateCrossword,
+        crossword: crossword,
       ),
     );
   }
@@ -37,9 +53,16 @@ class _CrosswordAppState extends State<CrosswordApp> {
 class CrosswordScreen extends StatefulWidget {
   final List<String> words;
   final Function(String) onAddWord;
+  final Function(List<String>) onGenerateCrossword;
+  final List<List<String>>? crossword;
 
-  CrosswordScreen({Key? key, required this.words, required this.onAddWord})
-      : super(key: key);
+  CrosswordScreen({
+    Key? key,
+    required this.words,
+    required this.onAddWord,
+    required this.onGenerateCrossword,
+    required this.crossword,
+  }) : super(key: key);
 
   @override
   _CrosswordScreenState createState() => _CrosswordScreenState();
@@ -47,7 +70,6 @@ class CrosswordScreen extends StatefulWidget {
 
 class _CrosswordScreenState extends State<CrosswordScreen> {
   final TextEditingController _wordController = TextEditingController();
-  List<List<String>>? crossword;
 
   void _addWord() {
     final word = _wordController.text.trim();
@@ -57,24 +79,13 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
     }
   }
 
-  Future<void> _generateCrossword(List<String> words) async {
-    // Your crossword generation logic goes here
-    // This should be a non-blocking operation
-
-    // For now, we'll simply set a delay to simulate the computation
-    await Future.delayed(Duration(seconds: 2));
-
-    // Replace this with your actual crossword grid
-    setState(() {
-      crossword = _dummyCrossword();
-    });
-  }
-
-  List<List<String>> _dummyCrossword() {
-    return [
-      ['H', 'E', 'L', 'L', 'O'],
-      ['W', 'O', 'R', 'L', 'D'],
-    ];
+  Future<void> _generateCrossword() async {
+    // Call the generateCrossword function with the current list of words
+    await widget.onGenerateCrossword(widget.words);
+    showDialog(
+      context: context,
+      builder: (_) => CrosswordDialog(crossword: widget.crossword),
+    );
   }
 
   @override
@@ -98,7 +109,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       labelText: 'Enter a word',
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 26),
+                      labelStyle: TextStyle(color: Colors.white, fontSize: 24),
                       border: InputBorder.none,
                     ),
                   ),
@@ -129,14 +140,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
           Container(
             margin: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () async {
-                // Generate and display the crossword puzzle
-                await _generateCrossword(widget.words);
-                showDialog(
-                  context: context,
-                  builder: (_) => CrosswordDialog(crossword: crossword),
-                );
-              },
+              onPressed: _generateCrossword, // Updated onPressed
               child: const Text(
                 'Generate Crossword',
                 style: TextStyle(fontSize: 18),
@@ -200,5 +204,77 @@ class CrosswordDialog extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+// Define the crossword generation function outside of the state class
+List<List<String>> _generateCrosswordGrid(List<String> words) {
+  final grid = List.generate(10, (_) => List.filled(10, ''));
+
+  final random = Random();
+
+  // Attempt to place each word until successful or too many attempts
+  for (final word in words) {
+    var attempts = 0;
+    while (attempts < 10) {
+      final isHorizontal = random.nextBool();
+      if (isHorizontal) {
+        final row = random.nextInt(10);
+        final col = random.nextInt(10 - word.length + 1);
+        if (_canPlaceWordHorizontally(grid, row, col, word)) {
+          _placeWordHorizontally(grid, row, col, word);
+          break;
+        }
+      } else {
+        final row = random.nextInt(10 - word.length + 1);
+        final col = random.nextInt(10);
+        if (_canPlaceWordVertically(grid, row, col, word)) {
+          _placeWordVertically(grid, row, col, word);
+          break;
+        }
+      }
+      attempts++;
+    }
+  }
+
+  // Fill in empty cells with random letters
+  for (var i = 0; i < grid.length; i++) {
+    for (var j = 0; j < grid[i].length; j++) {
+      if (grid[i][j].isEmpty) {
+        grid[i][j] = String.fromCharCode(Random().nextInt(26) + 65);
+      }
+    }
+  }
+
+  return grid;
+}
+
+bool _canPlaceWordHorizontally(List<List<String>> grid, int row, int col, String word) {
+  for (var i = 0; i < word.length; i++) {
+    if (grid[row][col + i].isNotEmpty && grid[row][col + i] != word[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void _placeWordHorizontally(List<List<String>> grid, int row, int col, String word) {
+  for (var i = 0; i < word.length; i++) {
+    grid[row][col + i] = word[i];
+  }
+}
+
+bool _canPlaceWordVertically(List<List<String>> grid, int row, int col, String word) {
+  for (var i = 0; i < word.length; i++) {
+    if (grid[row + i][col].isNotEmpty && grid[row + i][col] != word[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void _placeWordVertically(List<List<String>> grid, int row, int col, String word) {
+  for (var i = 0; i < word.length; i++) {
+    grid[row + i][col] = word[i];
   }
 }

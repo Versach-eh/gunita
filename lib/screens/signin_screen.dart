@@ -66,26 +66,32 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: MaterialApp(
-        home: Scaffold(
-          backgroundColor: const Color(0xffe7f9f9),
-          body: Container(
-            margin: const EdgeInsets.all(24),
-            child: Form(
-              key: formkey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const SizedBox(height: 15,),
-                    _header(context),
-                    const SizedBox(height: 15,),
-                    _inputField(context),
-                    _forgotPassword(context),
-                    _signup(context),
-                  ],
-                ),
+    return Container(
+      constraints: BoxConstraints.expand(), // Occupy the whole screen
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Make scaffold background transparent
+        body: Container(
+          margin: const EdgeInsets.all(24),
+          child: Form(
+            key: formkey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const SizedBox(height: 15,),
+                  _header(context),
+                  const SizedBox(height: 15,),
+                  _inputField(context),
+                  _forgotPassword(context),
+                  _signup(context),
+                ],
               ),
             ),
           ),
@@ -100,8 +106,8 @@ class _SignInScreenState extends State<SignInScreen> {
       children: [
         Row(children: [
           SizedBox(
-            width: 60,
-            height: 60,
+            width: 65,
+            height: 65,
             child: IconButton(
               icon: Image.asset('assets/images/arrow_back.png'),
               onPressed: () {
@@ -113,7 +119,7 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text(
           "Welcome Back!",
           style: TextStyle(
-            fontSize: 40,
+            fontSize: 44,
             fontWeight: FontWeight.bold,
             fontFamily: 'Magdelin', // Set the font family
             color: Color(0xff4f22cd),
@@ -123,8 +129,9 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text(
           "Log in to continue",
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 30,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Magdelin',
             color: Color(0xff8a8a8a),
           ),
         ),
@@ -136,11 +143,13 @@ class _SignInScreenState extends State<SignInScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        const SizedBox(height: 10),
         const Text(
           "Email",
           style: TextStyle(
-            fontSize: 23,
+            fontSize: 26,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Magdelin',
             color: Color(0xff020003),
           ),
         ),
@@ -157,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
           ),
           keyboardType: TextInputType.emailAddress,
         ),
@@ -165,8 +174,9 @@ class _SignInScreenState extends State<SignInScreen> {
         const Text(
           "Password",
           style: TextStyle(
-            fontSize: 23,
+            fontSize: 26,
             fontWeight: FontWeight.bold,
+            fontFamily: 'Magdelin',
             color: Color(0xff020003),
           ),
         ),
@@ -182,7 +192,7 @@ class _SignInScreenState extends State<SignInScreen> {
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: const Color(0xff83dbfe).withOpacity(0.5),
+            fillColor: const Color.fromARGB(255, 168, 122, 255).withOpacity(0.3),
             suffixIcon: IconButton(
               icon: Icon(
                 isPasswordHidden ? Icons.visibility_off : Icons.visibility,
@@ -198,7 +208,7 @@ class _SignInScreenState extends State<SignInScreen> {
           keyboardType: TextInputType.visiblePassword,
           onChanged: (val) {},
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 25),
         ElevatedButton(
           onPressed: () {
             if (formkey.currentState!.validate()) {
@@ -210,15 +220,16 @@ class _SignInScreenState extends State<SignInScreen> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Magdelin-Bold',
               color: Colors.white,
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff4f22cd),
+            backgroundColor: const Color(0xff4530B2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            minimumSize: const Size(280, 60),
+            minimumSize: const Size(230, 60),
           ),
         ),
       ],
@@ -236,10 +247,10 @@ class _SignInScreenState extends State<SignInScreen> {
       child: const Text(
         "Forgot password?",
         style: TextStyle(
-          fontSize: 18,
-          color: Color(0xff4f22cd),
+          fontSize: 20,
+          color: Color(0xff4530B2),
           fontWeight: FontWeight.bold,
-          fontFamily: 'Magdelin-Bold',
+          fontFamily: 'Magdelin',
         ),
       ),
     );
@@ -249,7 +260,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 50),
+        const SizedBox(height: 45),
         ElevatedButton(
           onPressed: () {
             Navigator.push(
@@ -260,14 +271,14 @@ class _SignInScreenState extends State<SignInScreen> {
           child: const Text(
             "Don't have an account? Sign Up",
             style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              fontWeight: FontWeight.normal,
               color: Colors.white,
               fontFamily: 'Magdelin-Bold',
             ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff4f22cd),
+            backgroundColor: const Color(0xff4530B2),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
             ),
