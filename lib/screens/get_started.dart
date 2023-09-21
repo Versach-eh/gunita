@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gunita20/screens/landingpage_screen.dart';
+// import 'package:gunita20/screens/landingpage_screen.dart';
+import 'package:gunita20/screens/signin_screen.dart';
 
 class CoverPage extends StatelessWidget {
   const CoverPage({super.key});
@@ -42,7 +43,7 @@ class CoverPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LandingPage()),
+                  MaterialPageRoute(builder: (context) => const SignInScreen()),
                 );
               },
               child: const Text(

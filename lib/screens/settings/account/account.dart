@@ -10,104 +10,110 @@ import 'package:gunita20/screens/settings/account/edit_contact.dart';
 import 'package:gunita20/screens/settings/account/edit_name.dart';
 import 'package:gunita20/screens/settings/settings_screen.dart';
 
-
 class Account extends StatelessWidget {
   final int _hoveredIndex = -1;
   final user = FirebaseAuth.instance.currentUser!;
 
-  Account({super.key});
+  Account({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe7f9f9),
-      body: ListView(
-        padding: EdgeInsets.all(20),
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.white, width: 1),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                hintStyle: TextStyle(
-                  color: Color(0xff8a8a8a),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: ListView(
+          padding: EdgeInsets.all(20),
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white, width: 1),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  hintStyle: TextStyle(
+                    color: Color(0xff8a8a8a),
+                  ),
+                  border: InputBorder.none,
                 ),
-                border: InputBorder.none,
+                style: TextStyle(color: Colors.black),
               ),
-              style: TextStyle(color: Colors.black),
             ),
-          ),
-          SizedBox(height: 30),
-          Text(
-            'Account Information',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff3b0d6b),
+            SizedBox(height: 30),
+            Text(
+              'Account Information',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff3b0d6b),
+              ),
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Account Information',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.normal,
-              color: Color(0xff959595),
+            SizedBox(height: 5),
+            Text(
+              'Account Information',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.normal,
+                color: Color(0xff959595),
+              ),
             ),
-          ),
-          SizedBox(height: 0),
-          _buildContainerWithText(
-            text: '',
-            children: [
-              _buildListItemWithIcon(
-                text: 'Name',
-                icon: Icons.person,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserDetailsScreen(userId: user.uid)),
-                  );
-                },
-                fontSize: 18,
-                textColor: Colors.black,
-              ),
-              _buildListItemWithIcon(
-                text: 'Birthday',
-                icon: Icons.cake_outlined,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => BirthdayScreen(userId: user.uid)),
-                  );
-                },
-                fontSize: 18,
-                textColor: Colors.black,
-              ),
-              _buildListItemWithIcon(
-                text: 'Contact Information',
-                icon: Icons.contact_mail_outlined,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ContactNumber()),
-                  );
-                  // Navigate to statistics page
-                },
-                fontSize: 18,
-                textColor: Colors.black,
-              ),
-            ],
-            containerHeight: 163,
-          ),
-        ],
+            SizedBox(height: 0),
+            _buildContainerWithText(
+              text: '',
+              children: [
+                _buildListItemWithIcon(
+                  text: 'Name',
+                  icon: Icons.person,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserDetailsScreen(userId: user.uid)),
+                    );
+                  },
+                  fontSize: 18,
+                  textColor: Colors.black,
+                ),
+                _buildListItemWithIcon(
+                  text: 'Birthday',
+                  icon: Icons.cake_outlined,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BirthdayScreen(userId: user.uid)),
+                    );
+                  },
+                  fontSize: 18,
+                  textColor: Colors.black,
+                ),
+                _buildListItemWithIcon(
+                  text: 'Contact Information',
+                  icon: Icons.contact_mail_outlined,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ContactNumber()),
+                    );
+                    // Navigate to statistics page
+                  },
+                  fontSize: 18,
+                  textColor: Colors.black,
+                ),
+              ],
+              containerHeight: 163,
+            ),
+          ],
+        ),
       ),
-
       bottomNavigationBar: Container(
         padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
         decoration: BoxDecoration(

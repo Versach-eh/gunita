@@ -9,87 +9,94 @@ import 'edit_bd.dart';
 
 class Password extends StatelessWidget {
   final int _hoveredIndex = -1;
-    final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser!;
 
-  Password({super.key});
-
+  Password({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffe7f9f9),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.white, width: 1),
-            ),
-            child: const TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                hintStyle: TextStyle(
-                  color: Color(0xff8a8a8a),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white, width: 1),
+              ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  hintStyle: TextStyle(
+                    color: Color(0xff8a8a8a),
+                  ),
+                  border: InputBorder.none,
                 ),
-                border: InputBorder.none,
+                style: TextStyle(color: Colors.black),
               ),
-              style: TextStyle(color: Colors.black),
             ),
-          ),
-          const SizedBox(height: 30),
-          const Text(
-            'Password and Security',
-            style: TextStyle(
-              fontSize: 29,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff3b0d6b),
+            const SizedBox(height: 30),
+            const Text(
+              'Password and Security',
+              style: TextStyle(
+                fontSize: 29,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff3b0d6b),
+              ),
             ),
-          ),
-          const SizedBox(height: 5),
-          const Text(
-            'Account Information',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.normal,
-              color: Color(0xff959595),
-            ),
-          ),
-          const SizedBox(height: 0),
-          _buildContainerWithText(
-            text: '',
-            children: [
-              _buildListItemWithIcon(
-                text: 'Change Password',
-                icon: Icons.person,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const EditPassword()),
-                  );
-                },
+            const SizedBox(height: 5),
+            const Text(
+              'Account Information',
+              style: TextStyle(
                 fontSize: 18,
-                textColor: Colors.black,
+                fontWeight: FontWeight.normal,
+                color: Color(0xff959595),
               ),
-              _buildListItemWithIcon(
-                text: 'Two-factor authentication',
-                icon: Icons.password_outlined,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => BirthdayScreen(userId: user.uid)),
-                  );
-                },
-                fontSize: 18,
-                textColor: Colors.black,
-              ),
-            ],
-            containerHeight: 115,
-          ),
-        ],
+            ),
+            const SizedBox(height: 0),
+            _buildContainerWithText(
+              text: '',
+              children: [
+                _buildListItemWithIcon(
+                  text: 'Change Password',
+                  icon: Icons.person,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const EditPassword()),
+                    );
+                  },
+                  fontSize: 18,
+                  textColor: Colors.black,
+                ),
+                _buildListItemWithIcon(
+                  text: 'Two-factor authentication',
+                  icon: Icons.password_outlined,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => BirthdayScreen(userId: user.uid)),
+                    );
+                  },
+                  fontSize: 18,
+                  textColor: Colors.black,
+                ),
+              ],
+              containerHeight: 115,
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
@@ -118,7 +125,7 @@ class Password extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const Album()),
               );
             }),
-            _buildNavigationButton(Icons.photo_album, () {
+            _buildNavigationButton(Icons.settings, () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const MySettings()),

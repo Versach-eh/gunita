@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 246, 246, 247), Color(0xffDBE9F7).withOpacity(0.8)],
+            colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
