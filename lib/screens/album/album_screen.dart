@@ -284,10 +284,10 @@ class _AlbumState extends State<Album> {
               );
             }),
             _buildNavigationButton(Icons.photo_album, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Album()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => Album()),
+              // );
             }),
            _buildNavigationButton(Icons.settings, () {
               Navigator.push(

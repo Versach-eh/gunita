@@ -216,10 +216,10 @@ class _MySettingsState extends State<MySettings> {
               );
             }),
             _buildNavigationButton(Icons.settings, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MySettings()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => MySettings()),
+              // );
             }),
           ],
         ),

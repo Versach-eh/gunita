@@ -260,11 +260,11 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildNavigationButton(Icons.home, () {
-              // Navigate to home page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
+              // // Navigate to home page
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => HomeScreen()),
+              // );
             }),
             _buildNavigationButton(Icons.games, () {
               // Navigate to game library page

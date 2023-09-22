@@ -70,8 +70,8 @@ class _CrosswordAppState extends State<CrosswordApp> {
     super.initState();
     _puzzleGenerator = WordSearchPuzzleGenerator(
       words: words,
-      gridSize: 10,
-      grid: List.generate(10, (_) => List<String>.filled(10, '')),
+      gridSize: 8,
+      grid: List.generate(8, (_) => List<String>.filled(8, '')),
     );
   }
 
@@ -84,7 +84,7 @@ class _CrosswordAppState extends State<CrosswordApp> {
   void resetGame() {
     setState(() {
       words.clear();
-      _puzzleGrid = List.generate(10, (_) => List<String>.filled(10, ''));
+      _puzzleGrid = List.generate(8, (_) => List<String>.filled(8, ''));
       _wordController.clear();
     });
   }
@@ -98,22 +98,30 @@ class _CrosswordAppState extends State<CrosswordApp> {
   }
 
   bool shouldShowGenerateButton() {
-  return words.isNotEmpty && _puzzleGrid.isEmpty; // Show generate button when words are added and puzzle is not generated
+    return words.isNotEmpty || _puzzleGrid.isNotEmpty; // Show generate button if words are added or puzzle is generated
+  }
+
+  void _generatePuzzle() {
+  if (words.length == 4) {
+    _puzzleGrid = _puzzleGenerator.generatePuzzle();
+
+    // Ensure all words are in the puzzle
+    for (final word in words) {
+      if (!_puzzleGrid.toString().contains(word)) {
+        _puzzleGrid = _puzzleGenerator.generatePuzzle();
+      }
+    }
+
+    // Print the generated grid to the console
+    for (final row in _puzzleGrid) {
+      print(row.join(" "));
+    }
+
+    setState(() {});
+  }
 }
 
 
-  void _generatePuzzle() {
-    if (words.length == 4) {
-      _puzzleGrid = _puzzleGenerator.generatePuzzle();
-
-      // Print the generated grid to the console
-      for (final row in _puzzleGrid) {
-        print(row.join(" "));
-      }
-
-      setState(() {});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +173,7 @@ class CrosswordScreen extends StatefulWidget {
 
 class _CrosswordScreenState extends State<CrosswordScreen> {
   final TextEditingController _wordController = TextEditingController();
-  List<List<bool>> _highlightedCells = List.generate(10, (_) => List<bool>.filled(10, false));
+  List<List<bool>> _highlightedCells = List.generate(8, (_) => List<bool>.filled(8, false));
   String _currentWord = '';
   List<String> _foundWords = [];
 
@@ -261,50 +269,53 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
             SizedBox(height: 20),
 
             Container(
-              color: Color(0xff4530B2),
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      'Enter a word',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 60,
-                    child: TextField(
-                      controller: _wordController,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Type your word here',
-                        hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 18,
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z]+$')), // Allow only letters
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  ElevatedButtonContainer(
-                    onPressed: widget.canAddWord ? _addWord : widget.onResetGame,
-                    buttonText: widget.canAddWord ? 'Add Word' : 'Reset Game',
-                  ),
-                ],
-              ),
+  color: Color(0xff4530B2),
+  padding: const EdgeInsets.all(8.0),
+  child: Column(
+    children: [
+      Container(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Text(
+          'Enter a word',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+          ),
+        ),
+      ),
+      Container(
+        height: 60,
+        child: TextField(
+          controller: _wordController,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Type your word here',
+            hintStyle: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 18,
             ),
-
+            border: InputBorder.none,
+            focusedBorder: UnderlineInputBorder( // Add underline when focused
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z]+$')), // Allow only letters
+          ],
+          textCapitalization: TextCapitalization.characters, // Set text to uppercase
+        ),
+      ),
+      SizedBox(height: 8),
+      ElevatedButtonContainer(
+        onPressed: widget.canAddWord ? _addWord : widget.onResetGame,
+        buttonText: widget.canAddWord ? 'Add Word' : 'Reset Game',
+      ),
+    ],
+  ),
+          ),
             SizedBox(height: 16),
 
             Column(
@@ -320,16 +331,19 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
             if (widget.shouldShowGenerateButton)
               ElevatedButtonContainer(
                 onPressed: widget.shouldShowGenerateButton ? () => widget.generatePuzzle() : null,
-                buttonText: widget.puzzleGrid.isNotEmpty ? 'Puzzle Generated' : 'Generate Crossword',
+                buttonText: widget.puzzleGrid.isNotEmpty ? 'Generate Crossword' : 'Generate Crossword',
               ),
 
             SizedBox(height: 20),
 
             if (widget.puzzleGrid.isNotEmpty)
-              PuzzleGrid(
-                puzzleGrid: widget.puzzleGrid,
-                highlightedCells: _highlightedCells,
-                onWordFound: _handleWordFound,
+              Container( // Wrap the PuzzleGrid with Container
+                margin: EdgeInsets.symmetric(horizontal: 20), // Add space on both sides
+                child: PuzzleGrid(
+                  puzzleGrid: widget.puzzleGrid,
+                  highlightedCells: _highlightedCells,
+                  onWordFound: _handleWordFound,
+                ),
               ),
 
             SizedBox(height: 20),
@@ -352,10 +366,15 @@ class ElevatedButtonContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50), // Adjust padding for the container
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Text(buttonText),
+        child: Text(
+          buttonText,
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
       ),
     );
   }
