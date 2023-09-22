@@ -55,16 +55,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (passwordConfirmed()) {
       final email = _emailTextController.text.trim();
 
-      // Check if the email is already in use
       final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
 
       if (methods.isEmpty) {
-        // Email is not in use, proceed with registration
-
-        // loading animation                                      // ADD THIS LINES
-        showDialog(context: context, builder: (context) {
-          return Loading();
-        });
+        showDialog(
+          context: context,
+          builder: (context) {
+            return Loading();
+          },
+        );
 
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
@@ -74,13 +73,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
           addUserAccountDetails(email);
           Navigator.push(context, MaterialPageRoute(builder: (context) => const PreSignUpScreen()));
         }).catchError((error) {
-          // Handle any errors that occur during registration
           print('Error creating account: $error');
+          Navigator.pop(context); // Close the loading dialog
+          // Show the email already in use prompt
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Email in Use'),
+                content: Text('The email address is already in use. Please use a different email address.'),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the alert dialog
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         });
       } else {
-        // Email is already in use, display an error message
         print('Email is already in use.');
-        // You can show an error message to the user here
+        // Show the email already in use prompt
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Email in Use'),
+              content: Text('The email address is already in use. Please use a different email address.'),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the alert dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   }
@@ -97,10 +130,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints.expand(), // Occupy the whole screen
+      constraints: BoxConstraints.expand(),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
@@ -109,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent, // Make scaffold background transparent
+        backgroundColor: Colors.transparent,
         body: Container(
           margin: const EdgeInsets.all(24),
           child: Form(
@@ -141,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context); // Return to the previous page
+                Navigator.pop(context);
               },
             ),
           ],
@@ -155,7 +187,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: Color(0xff4f22cd),
           ),
         ),
-
         const Text(
           "Create new account",
           style: TextStyle(
@@ -185,10 +216,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (!RegExp(r'^09\d{2}-\d{3}-\d{4}$').hasMatch(value)) {
               return 'Invalid contact number format. It should start with 09';
             }
-            return null; // Return null if validation succeeds
+            return null;
           },
           controller: _contactNumberController,
-          inputFormatters: [_contactNumberFormatter], // Add formatter here
+          inputFormatters: [_contactNumberFormatter],
           obscureText: false,
           enableSuggestions: true,
           autocorrect: true,
@@ -219,7 +250,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (value.length > 200) {
               return 'Email should have at most 200 characters';
             }
-            return null; // Return null if validation succeeds
+            return null;
           },
           controller: _emailTextController,
           obscureText: false,
@@ -249,10 +280,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (value.length < 8) {
               return 'Password must be at least 8 characters long';
             }
-            return null; // Return null if validation succeeds
+            return null;
           },
           controller: _passwordTextController,
-          obscureText: !_showPassword, // Toggle password visibility
+          obscureText: !_showPassword,
           enableSuggestions: false,
           autocorrect: false,
           decoration: InputDecoration(
@@ -266,7 +297,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               onPressed: () {
                 setState(() {
-                  _showPassword = !_showPassword; // Toggle visibility
+                  _showPassword = !_showPassword;
                 });
               },
             ),
@@ -288,10 +319,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (value != _passwordTextController.text) {
               return 'Passwords do not match';
             }
-            return null; // Return null if validation succeeds
+            return null;
           },
           controller: _confirmPasswordTextController,
-          obscureText: !_showPassword, // Toggle password visibility
+          obscureText: !_showPassword,
           enableSuggestions: false,
           autocorrect: false,
           decoration: InputDecoration(
@@ -305,7 +336,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               onPressed: () {
                 setState(() {
-                  _showPassword = !_showPassword; // Toggle visibility
+                  _showPassword = !_showPassword;
                 });
               },
             ),
@@ -345,28 +376,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
- Widget _requiredFieldLabel(String label) {
-  return Row(
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 23,
-          fontWeight: FontWeight.bold,
-          color: Color(0xff020003),
-          fontFamily: 'Magdelin',
-          //color: Colors.red,
+  Widget _requiredFieldLabel(String label) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+            color: Color(0xff020003),
+            fontFamily: 'Magdelin',
+          ),
         ),
-      ),
-      Text(
-        " *", // Asterisk indicating required field
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.red, // Red asterisk color
+        Text(
+          " *",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 }

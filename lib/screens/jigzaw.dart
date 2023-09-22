@@ -54,7 +54,7 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
 
                       void _checkCompletion() {
               completedPieces++;
-              if (completedPieces == xSplitCount * ySplitCount + 4) {
+              if (completedPieces == xSplitCount * ySplitCount + 6) {
                 _showCongratulationsDialog(context);
               }
             }
@@ -218,26 +218,6 @@ class _PuzzleWidgetState extends State<PuzzleWidget> {
                           await jigKey.currentState?.generaJigsawCropImage();
                         },
                         child: Text("Start"),
-                      ),
-
-
-                    ElevatedButton(
-                        child: Text("5x5"), // Button for 5x5
-                        onPressed: () {
-                          setState(() {
-                            xSplitCount = 5;
-                            ySplitCount = 5;
-                          });
-                        },
-                      ),
-                      ElevatedButton(
-                        child: Text("7x7"), // Button for 7x7
-                        onPressed: () {
-                          setState(() {
-                            xSplitCount = 7;
-                            ySplitCount = 7;
-                            });
-                        },
                       ),
                      
                     ],
