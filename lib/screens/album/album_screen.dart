@@ -175,12 +175,11 @@ import 'package:gunita20/screens/album/album_model.dart';
 import 'package:gunita20/screens/album/create_album_screen.dart';
 import 'package:gunita20/screens/gamelibrary_screen.dart';
 import 'package:gunita20/screens/home_screen.dart';
-import 'package:gunita20/services/firebase_service.dart';
 import 'package:gunita20/screens/settings/settings_screen.dart';
-
+import 'package:gunita20/services/firebase_service.dart';
 
 class Album extends StatefulWidget {
-  const Album({super.key});
+  const Album({Key? key}) : super(key: key);
 
   @override
   _AlbumState createState() => _AlbumState();
@@ -191,7 +190,6 @@ class _AlbumState extends State<Album> {
   List<MyAlbum> albums = [];
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // testing
 
   Future<User?> _getUser() async {
     return _auth.currentUser;
@@ -213,55 +211,141 @@ class _AlbumState extends State<Album> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff4f22cd),
-        title: Text('Albums'),
-      ),
-      // body: ListView.builder(
-      //   itemCount: albums.length,
-      //   itemBuilder: (context, index) {
-      //     final album = albums[index];
-      //     return ListTile(
-      //       title: Text(album.title),
-      //       onTap: () {
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (context) => AlbumImagesScreen(album: album),
-      //           ),
-      //         );
-      //       },
-      //     );
-      //   },
-      // ),
-      body: FutureBuilder<User?>(
-        future: _getUser(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data != null) {
-              return AlbumList(currentUser: snapshot.data!);
-            } else {
-              return CircularProgressIndicator();
-            }
-          } else {
-            return CircularProgressIndicator();
-          }
-        },
-      ),
-
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddAlbumScreen(),
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 1.6, // Adjust the height as needed
+              decoration: BoxDecoration(
+                color: Color(0xff4f22cd).withOpacity(0.5),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(60.0)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: FutureBuilder<User?>(
+                      future: _getUser(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.data != null) {
+                            return AlbumList(currentUser: snapshot.data!);
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        },
-        backgroundColor: Color(0xff4f22cd),
-        child: Icon(Icons.add),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.all(50),
+              child: FutureBuilder<User?>(
+                future: _getUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data != null) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Color(0xff959595), // Adjust the border color as needed
+                                width: 4.0,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(6),
+                            child: Icon(
+                              Icons.photo,
+                              size: 80,
+                              color: Color(0xff959595), // Adjust the icon color as needed
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Test123",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Age:",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                "Sex:",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
+      floatingActionButton: ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddAlbumScreen(),
+      ),
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    primary: Color(0xff4f22cd),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  ),
+  child: Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.add),
+        SizedBox(width: 8),
+        Text(
+          'Create Album',
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
+    ),
+  ),
+),
+
+
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
@@ -272,36 +356,19 @@ class _AlbumState extends State<Album> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildNavigationButton(Icons.home, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
+              _onTabTapped(0);
             }),
             _buildNavigationButton(Icons.games, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GameLibrary()),
-              );
+              _onTabTapped(1);
             }),
-            _buildNavigationButton(Icons.photo_album, () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => Album()),
-              // );
+            _buildNavigationButton(Icons.photo_album, () {}),
+            _buildNavigationButton(Icons.settings, () {
+              _onTabTapped(3);
             }),
-           _buildNavigationButton(Icons.settings, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MySettings()),
-              );
-           }),
           ],
         ),
       ),
-    
-  
     );
-    
   }
 
   Widget _buildNavigationButton(IconData icon, VoidCallback onPressed) {
@@ -360,28 +427,30 @@ class _AlbumState extends State<Album> {
   }
 }
 
-
-
-
-class AlbumList extends StatelessWidget {       //  Uses StreamBuilder to display albums real time
+class AlbumList extends StatelessWidget {
   final User currentUser;
 
-  const AlbumList({super.key, required this.currentUser});
+  const AlbumList({Key? key, required this.currentUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('Users/${currentUser.uid}/albums').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('Users/${currentUser.uid}/albums')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final albums = snapshot.data!.docs.map((doc) => MyAlbum(id: doc.id, title: doc['title'], imageUrls: [])).toList();
+          final albums = snapshot.data!.docs
+              .map((doc) => MyAlbum(id: doc.id, title: doc['title'], imageUrls: []))
+              .toList();
           return ListView.builder(
             itemCount: albums.length,
             itemBuilder: (context, index) {
               final album = albums[index];
               return ListTile(
-                title: Text(album.title,
-                style: TextStyle(fontSize: 25.0),
+                title: Text(
+                  album.title,
+                  style: TextStyle(fontSize: 25.0),
                 ),
                 shape: Border(
                   bottom: BorderSide(),
@@ -390,7 +459,8 @@ class AlbumList extends StatelessWidget {       //  Uses StreamBuilder to displa
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AlbumImagesScreen(currentUser: currentUser, album: album),
+                      builder: (context) =>
+                          AlbumImagesScreen(currentUser: currentUser, album: album),
                     ),
                   );
                 },
@@ -398,10 +468,9 @@ class AlbumList extends StatelessWidget {       //  Uses StreamBuilder to displa
             },
           );
         } else {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }
       },
     );
   }
-  
 }

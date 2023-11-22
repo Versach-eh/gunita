@@ -1,4 +1,4 @@
-#Fri Sep 22 19:21:58 PST 2023
+#Fri Sep 22 23:07:54 PST 2023
 base.0=C\:\\Users\\Sheila Mae Geroche\\Desktop\\gunita20\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

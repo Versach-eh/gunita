@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gunita20/screens/album/album_screen.dart';
-import 'package:gunita20/screens/crossword/crossword.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:gunita20/screens/home_screen.dart';
-import 'package:gunita20/screens/jigzaw.dart';
+import 'package:gunita20/screens/album/album_screen.dart';
 import 'package:gunita20/screens/settings/settings_screen.dart';
 
 class GameLibrary extends StatefulWidget {
@@ -13,149 +12,130 @@ class GameLibrary extends StatefulWidget {
 }
 
 class _GameLibraryState extends State<GameLibrary> {
-  int _hoveredIndex = -1;
+  List<Map<String, dynamic>> images = [
+    {'path': 'assets/images/jigsaw1.png'},
+    {'path': 'assets/images/wordsearch.png'},
+    {'path': 'assets/images/mam.png'},
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xffF2F6FC), Color(0xffDBE9F7).withOpacity(0.8)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Header Section
             Container(
               padding: const EdgeInsets.all(20),
+              color: Color.fromARGB(255, 254, 254, 255),
               child: Column(
                 children: [
-                  SizedBox(height: 40),
+                  SizedBox(height: 20),
                   Text(
                     'Library of Games',
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Color(0xff4f22cd),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Divider(
-                    color: Colors.black,
-                    thickness: 1,
-                    height: 20,
-                  ),
+                  )
                 ],
               ),
             ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  children: [
-                    _buildClickableImage(
-                      'assets/images/crossword.png',
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => CrosswordApp()),
-                        );
-                      },
+
+            // Images Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: images.map((imageData) {
+                  return GestureDetector(
+                    onTap: () {
+                      // Handle the click action for the image
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 16),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: AspectRatio(
+                              aspectRatio: 16 / 7,
+                              child: Image.asset(
+                                imageData['path'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          right: 8,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Play', // Replace with your desired text
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    _buildClickableImage(
-                      'assets/images/jigsaw.png',
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PuzzleWidget()),
-                        );
-                      },
-                    ),
-                    _buildClickableImage(
-                      'assets/images/mam.png',
-                      () {
-                        // Replace GameLibrary() with the appropriate screen.
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => GameLibrary()),
-                        // );
-                      },
-                    ),
-                    _buildClickableImage(
-                      'assets/images/majong.png',
-                      () {
-                        // Replace GameLibrary() with the appropriate screen.
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => GameLibrary()),
-                        // );
-                      },
-                    ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(1.0),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildNavigationButton(Icons.home, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                    );
-                  }),
-                  _buildNavigationButton(Icons.games, () {
-                    // Replace GameLibrary() with the appropriate screen.
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => GameLibrary()),
-                    // );
-                  }),
-                  _buildNavigationButton(Icons.photo_album, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Album()),
-                    );
-                  }),
-                  _buildNavigationButton(Icons.settings, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MySettings()),
-                    );
-                  }),
-                ],
-              ),
-            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(20),
+        color: Colors.white.withOpacity(1.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildNavigationButton(Icons.home, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            }),
+            _buildNavigationButton(Icons.games, () {
+              // Handle the game library button click
+            }),
+            _buildNavigationButton(Icons.photo_album, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Album()),
+              );
+            }),
+            _buildNavigationButton(Icons.settings, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MySettings()),
+              );
+            }),
           ],
         ),
       ),
     );
   }
 
-  void _handleMouseEnter(int index) {
-    setState(() {
-      _hoveredIndex = index;
-    });
-  }
-
-  void _handleMouseExit() {
-    setState(() {
-      _hoveredIndex = -1;
-    });
-  }
-
+  // Helper method to build navigation buttons
   Widget _buildNavigationButton(IconData icon, VoidCallback onPressed) {
     return IconButton(
       icon: Icon(
@@ -164,18 +144,6 @@ class _GameLibraryState extends State<GameLibrary> {
         color: const Color(0xff959595),
       ),
       onPressed: onPressed,
-    );
-  }
-
-  Widget _buildClickableImage(String imagePath, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Image.asset(
-        imagePath,
-        width: double.infinity,
-        height: double.infinity,
-        fit: BoxFit.cover,
-      ),
     );
   }
 }

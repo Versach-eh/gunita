@@ -33,3 +33,5 @@ com.flutllab.gunita20.app-packaged_res-31 C:\Users\Sheila Mae Geroche\Desktop\gu
 com.flutllab.gunita20.app-packaged_res-32 C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\firebase_storage\intermediates\packaged_res\debug
 com.flutllab.gunita20.app-packaged_res-33 C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\flutter_plugin_android_lifecycle\intermediates\packaged_res\debug
 com.flutllab.gunita20.app-packaged_res-34 C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\image_picker_android\intermediates\packaged_res\debug
+com.flutllab.gunita20.app-packaged_res-35 C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\path_provider_android\intermediates\packaged_res\debug
+com.flutllab.gunita20.app-packaged_res-36 C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\sqflite\intermediates\packaged_res\debug

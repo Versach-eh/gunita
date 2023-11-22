@@ -58,6 +58,8 @@ MERGED from [:firebase_core] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\
 MERGED from [:file_picker] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\file_picker\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-19:12
 MERGED from [:image_picker_android] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-21:12
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
+MERGED from [:sqflite] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\sqflite\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
+MERGED from [:path_provider_android] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.firebase:firebase-auth:22.1.0] C:\Users\Sheila Mae Geroche\.gradle\caches\transforms-3\422a49f950b2eca000edc9e2e1dd9477\transformed\jetified-firebase-auth-22.1.0\AndroidManifest.xml:17:1-75:12
 MERGED from [com.google.android.recaptcha:recaptcha:18.1.2] C:\Users\Sheila Mae Geroche\.gradle\caches\transforms-3\57922d9ab607f19f00b149ba9c04d889\transformed\jetified-recaptcha-18.1.2\AndroidManifest.xml:2:1-10:12
 MERGED from [com.google.firebase:firebase-storage:20.2.1] C:\Users\Sheila Mae Geroche\.gradle\caches\transforms-3\a2afe09f9d02b5dc046627f223c946f4\transformed\jetified-firebase-storage-20.2.1\AndroidManifest.xml:15:1-38:12
@@ -134,6 +136,10 @@ MERGED from [:image_picker_android] C:\Users\Sheila Mae Geroche\Desktop\gunita20
 MERGED from [:image_picker_android] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:sqflite] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\sqflite\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:sqflite] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\sqflite\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:path_provider_android] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:path_provider_android] C:\Users\Sheila Mae Geroche\Desktop\gunita20\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [com.google.firebase:firebase-auth:22.1.0] C:\Users\Sheila Mae Geroche\.gradle\caches\transforms-3\422a49f950b2eca000edc9e2e1dd9477\transformed\jetified-firebase-auth-22.1.0\AndroidManifest.xml:21:5-23:64
 MERGED from [com.google.firebase:firebase-auth:22.1.0] C:\Users\Sheila Mae Geroche\.gradle\caches\transforms-3\422a49f950b2eca000edc9e2e1dd9477\transformed\jetified-firebase-auth-22.1.0\AndroidManifest.xml:21:5-23:64
 MERGED from [com.google.android.recaptcha:recaptcha:18.1.2] C:\Users\Sheila Mae Geroche\.gradle\caches\transforms-3\57922d9ab607f19f00b149ba9c04d889\transformed\jetified-recaptcha-18.1.2\AndroidManifest.xml:5:5-44
