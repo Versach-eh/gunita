@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gunita20/screens/album/album_model.dart';
-import 'package:gunita20/services/firebase_service.dart';
+import 'package:gunita20/screens/album/album_images_screen.dart';
 
 class AddAlbumScreen extends StatefulWidget {
   const AddAlbumScreen({Key? key}) : super(key: key);
@@ -11,21 +10,6 @@ class AddAlbumScreen extends StatefulWidget {
 
 class _AddAlbumScreenState extends State<AddAlbumScreen> {
   final TextEditingController _titleController = TextEditingController();
-  final FirebaseService firebaseService = FirebaseService();
-
-  void _submitForm() {
-    final String title = _titleController.text.trim();
-    if (title.isNotEmpty) {
-      final MyAlbum newAlbum = MyAlbum(
-        id: '',
-        title: title,
-        imageUrls: [],
-      );
-
-      firebaseService.addAlbum(newAlbum);
-      Navigator.of(context).pop();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +50,7 @@ class _AddAlbumScreenState extends State<AddAlbumScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Cancel button
+                    Navigator.of(context).pop(); // Close button
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,
@@ -79,7 +63,13 @@ class _AddAlbumScreenState extends State<AddAlbumScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _submitForm(); // Use the _submitForm method for "Next" button
+                    final String title = _titleController.text.trim();
+                    if (title.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AlbumImagesScreen()),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     fixedSize: const Size(150, 50),
